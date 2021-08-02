@@ -5,8 +5,7 @@
 let d = new Date();
 let newDate = d.getMonth()+1+'.'+ d.getDate()+'.'+ d.getFullYear();
 
-// listener to button click
-document.getElementById('generate').addEventListener('click', performAction);
+
 // callback for click listener
 function performAction(){
     // access values from user
@@ -81,3 +80,5 @@ const updateUI = async () => {
         alert(error);
     }
 }
+
+export default performAction;
