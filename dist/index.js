@@ -554,31 +554,32 @@ let newDate = d.getMonth()+1+'.'+ d.getDate()+'.'+ d.getFullYear();
 // callback for click listener
 function performAction(){
     // access values from user
-    const zipCode = document.getElementById('zip').value;
-    const feelings = document.getElementById('feelings').value;
-    if(!zipCode || !feelings){
+    const city = document.getElementById('city').value;
+    const date = document.getElementById('date').value;
+    if(!city || !date){
         alert('Please fill all the fields');
         return;
     }
     // chaining promises
-    getWeather(zipCode)
+    getWeather(city)
     .then(function(data){
-    postData('/journal', {temp: data.main.temp, date: newDate, feels_like: data.main.feels_like, feeling: feelings})
+    postData('/api/journal', {lat: data.postalCodes[0].lat, long: data.postalCodes[0].lng, city: city,country: data.postalCodes[0].countryCode, date: date})
     .then(updateErase())
 })
 }
 function updateErase(){
     updateUI();
-    document.getElementById('zip').value = '';
-    document.getElementById('feelings').value = '';
+    document.getElementById('city').value = '';
+    document.getElementById('date').value = '';
 }
 // Get weather from API
-const getWeather = async (zipCode)=>{
-    const apiKey = 'debdd1dcdd2e3fa985e31c252c3049d0'
-    const baseURL = `http://api.openweathermap.org/data/2.5/weather?zip=${zipCode}&units=metric&appid=${apiKey}`
-    const res = await fetch(baseURL)
+const getWeather = async (city)=>{
+    const username = 'brendamoreira'
+    const baseURL = `http://api.geonames.org/postalCodeSearchJSON?placename=${city}&maxRows=10&username=${username}`
     try {
+        const res = await fetch(baseURL)
         const data = await res.json();
+        console.log(data, '****')
         if(res.status !== 200){
             alert(data.message);
             throw new Error(data.message);
@@ -601,7 +602,9 @@ const postData = async (url= '', data = {})=>{
     });
 
     try {
+        console.log(response, '**')
         const newData = await response.json();
+        console.log(newData, '*')
         return newData;
     } catch(error) {
         console.log(error);
@@ -611,14 +614,12 @@ const postData = async (url= '', data = {})=>{
 
 // dynamic UI update
 const updateUI = async () => {
-    const request = await fetch('/journal/latest');
+    const request = await fetch('/api/journal/latest');
     try{
         const entry = await request.json();
         console.log(entry);
         document.getElementById('date').innerHTML = "Date " + entry.date;
-        document.getElementById('temp').innerHTML = "Weather: " + entry.temp + "ºC";
-        document.getElementById('feels').innerHTML = "Feels like " + entry.feels_like + "ºC";
-        document.getElementById('content').innerHTML = "I am " + entry.feeling;
+        document.getElementById('city').innerHTML = entry.city;
     }
     catch(error){
         console.log(error);

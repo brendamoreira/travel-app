@@ -6,10 +6,7 @@ const express = require('express');
 // Start up an instance of app
 const app = express();
 /* Middleware*/
-//Here we are configuring express to use body-parser as middle-ware.
-const bodyParser = require('body-parser')
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+app.use(express.json());
 
 // Cors for cross origin allowance
 const cors = require('cors');
@@ -25,11 +22,12 @@ const server = app.listen(port, function listening(){
     console.log(`running on localhost: ${port}`)
 });
 
-app.post("/journal", function(req, res){
+app.post("/api/journal", function(req, res){
     projectData[id] = req.body;
     id += 1;
+    res.send({})
 });
 
-app.get("/journal/latest", function(req, res){
+app.get("/api/journal/latest", function(req, res){
     res.send(projectData[id-1] || {});
 });
