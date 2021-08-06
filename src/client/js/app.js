@@ -22,18 +22,22 @@ function countdown(date) {
   let diffDays = diffTime / (1000 * 3600 * 24);
   return diffDays;
 }
+// formats destination for image api
+function formatForImgSearch(destination) {
+  return destination.trim().split(" ").join("+");
+}
 
 // callback for click listener
 function performAction() {
   // access values from user
-  const city = document.getElementById("destination").value;
+  const destination = document.getElementById("destination").value;
   const date = document.getElementById("tripDate").value;
   if (!city || !date) {
     alert("Please fill all the fields");
     return;
   }
   // chaining promises
-  getLocation(city).then(function (data) {
+  getLocation(destination).then(function (data) {
     let lat = data.postalCodes[0].lat;
     let lon = data.postalCodes[0].lng;
     let city = data.postalCodes[0].placeName;
@@ -47,6 +51,14 @@ function performAction() {
       console.log(maxTemp, minTemp);
       document.getElementById("max_temp").innerHTML = maxTemp;
       document.getElementById("min_temp").innerHTML = minTemp;
+    });
+    getImage(formatForImgSearch(destination)).then(function (images) {
+      if (!images.hits.length) {
+        return;
+      }
+      let img = images.hits[0].previewURL;
+      document.getElementById("image").setAttribute("src", img);
+      console.log(images);
     });
   });
 }
@@ -75,8 +87,8 @@ const getLocation = async (city) => {
 
 // Get weather from API
 const getWeatherForecast = async (lat, lon, days) => {
-  const apiKey = "";
-  const baseUrl = `http://api.weatherbit.io/v2.0/forecast/daily?days=${days}&lat=${lat}&lon=${lon}&key=${apiKey}`;
+  const weatherApiKey = "";
+  const baseUrl = `http://api.weatherbit.io/v2.0/forecast/daily?days=${days}&lat=${lat}&lon=${lon}&key=${weatherApiKey}`;
   try {
     const res = await fetch(baseUrl);
     const { data } = await res.json();
@@ -85,6 +97,23 @@ const getWeatherForecast = async (lat, lon, days) => {
       throw new Error(data.message);
     }
     return data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+// Get image from API
+const getImage = async (place) => {
+  const imageApiKey = "";
+  const urlBase = `https://pixabay.com/api/?key=${imageApiKey}&q=${place}&image_type=photo&safesearch=true`;
+  try {
+    const res = await fetch(urlBase);
+    const images = await res.json();
+    if (res.status !== 200) {
+      alert(images.message);
+      throw new Error(data.message);
+    }
+    return images;
   } catch (error) {
     console.log(error);
   }
