@@ -1,3 +1,5 @@
+const dotenv = require('dotenv');
+dotenv.config();
 // Setup empty JS object to act as endpoint for all routes
 const projectData = {};
 let id = 1;
@@ -31,3 +33,4 @@ app.post("/api/journal", function(req, res){
 app.get("/api/journal/latest", function(req, res){
     res.send(projectData[id-1] || {});
 });
+

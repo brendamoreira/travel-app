@@ -1,11 +1,11 @@
 /* Global Variables */
 
 // Create a new date instance dynamically with JS
-function getToday() {
-  let today = new Date();
-  let year = today.getFullYear();
-  let month = today.getMonth() + 1;
-  let day = today.getDate();
+function formattedDate(someDate) {
+  let date = new Date(someDate);
+  let year = date.getFullYear();
+  let month = date.getMonth() + 1;
+  let day = date.getDate();
   if (day < 10) {
     day = "0" + day;
   }
@@ -14,40 +14,72 @@ function getToday() {
   }
   return `${year}-${month}-${day}`;
 }
+// countdown
+function countdown(date) {
+  let today = new Date();
+  let tripDay = new Date(date);
+  let diffTime = tripDay.getTime() - today.getTime();
+  let diffDays = diffTime / (1000 * 3600 * 24);
+  return diffDays;
+}
 
 // callback for click listener
 function performAction() {
   // access values from user
-  const city = document.getElementById("city").value;
+  const city = document.getElementById("destination").value;
   const date = document.getElementById("tripDate").value;
   if (!city || !date) {
     alert("Please fill all the fields");
     return;
   }
   // chaining promises
-  getWeather(city).then(function (data) {
-    postData("/api/journal", {
-      lat: data.postalCodes[0].lat,
-      long: data.postalCodes[0].lng,
-      city: data.postalCodes[0].placeName,
-      country: data.postalCodes[0].countryCode,
-      date: date,
-    }).then(updateErase());
+  getLocation(city).then(function (data) {
+    let lat = data.postalCodes[0].lat;
+    let lon = data.postalCodes[0].lng;
+    let city = data.postalCodes[0].placeName;
+    let country = data.postalCodes[0].countryCode;
+    postData("/api/journal", { lat, lon, city, country, date }).then(
+      updateErase()
+    );
+    getWeatherForecast(lat, lon, countdown(date)).then(function (data) {
+      let maxTemp = data[data.length - 1].max_temp;
+      let minTemp = data[data.length - 1].min_temp;
+      console.log(maxTemp, minTemp);
+      document.getElementById("max_temp").innerHTML = maxTemp;
+      document.getElementById("min_temp").innerHTML = minTemp;
+    });
   });
 }
 function updateErase() {
   updateUI();
-  document.getElementById("city").value = "";
+  document.getElementById("destination").value = "";
   document.getElementById("tripDate").value = "";
 }
-// Get weather from API
-const getWeather = async (city) => {
+// Get location from API
+const getLocation = async (city) => {
   const username = "brendamoreira";
   const baseURL = `http://api.geonames.org/postalCodeSearchJSON?placename=${city}&maxRows=10&username=${username}`;
   try {
     const res = await fetch(baseURL);
     const data = await res.json();
     console.log(data, "****");
+    if (res.status !== 200) {
+      alert(data.message);
+      throw new Error(data.message);
+    }
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+// Get weather from API
+const getWeatherForecast = async (lat, lon, days) => {
+  const apiKey = "";
+  const baseUrl = `http://api.weatherbit.io/v2.0/forecast/daily?days=${days}&lat=${lat}&lon=${lon}&key=${apiKey}`;
+  try {
+    const res = await fetch(baseUrl);
+    const { data } = await res.json();
     if (res.status !== 200) {
       alert(data.message);
       throw new Error(data.message);
@@ -95,4 +127,4 @@ const updateUI = async () => {
 };
 
 export default performAction;
-export { getToday };
+export { formattedDate };
