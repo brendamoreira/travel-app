@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "description": "## Overview This project requires you to create an asynchronous web app that uses Web API and user data to dynamically update the UI.",
   "main": "server.js",
-   "scripts": {
+  "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node src/server/server.js",
+    "start": "nodemon src/server/server.js",
     "build": "webpack --config webpack.config.js --open",
     "dev": "webpack-dev-server --config webpack.config.js --open"
   },
@@ -38,6 +38,7 @@
     "jest": "^27.0.6",
     "mini-css-extract-plugin": "^1.6.2",
     "node-sass": "^5.0.0",
+    "nodemon": "^2.0.12",
     "optimize-css-assets-webpack-plugin": "^6.0.1",
     "sass-loader": "^10.1.1",
     "style-loader": "^2.0.0",
