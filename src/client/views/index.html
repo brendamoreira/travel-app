@@ -11,19 +11,26 @@
     Travel App
   </div>
   <div class ="holder city">
-    <label for="destination">Enter City here</label>
-    <input type="text" id="destination" placeholder="enter city here">
+    <label for="destinationCity">Enter City here</label>
+    <input type="text" id="destinationCity" placeholder="enter city here">
+    <label for="destinationCountry">Enter Country Code here</label>
+    <input type="text" id="destinationCountry" placeholder="enter country code here, ex: US, CA, NL" maxlength="2">
   </div>
   <div class ="holder date">
-    <label for="tripDate">When is your travel?</label>
-    <input class= "myInput" id="tripDate" type="date"></input>
+    <label for="tripDateFrom">When is your travel?</label>
+    <div>From</div>
+    <input class= "myInput" id="tripDateFrom" type="date"></input>
+    <div>To</div>
+    <input class= "myInput" id="tripDateTo" type="date"></input>
     <button id="generate" type = "submit"> Generate </button>
   </div>
   <div class ="holder entry">
     <div class = "title">Most Recent Entry</div>
    <div id= "entryHolder">
-    <div id= "date"></div> 
+    <div id= "fromDate"></div>
+    <div id= "toDate"></div> 
    <div id= "city"></div>
+   <div id= "duration"></div> 
    <div id="max_temp"></div>
    <div id="min_temp"></div>
    <img id="image">

@@ -26,33 +26,43 @@ function countdown(date) {
 function formatForImgSearch(destination) {
   return destination.trim().split(" ").join("+");
 }
-
+//
+function tripDays(from, to) {
+    let beginning = new Date(from);
+    let ending = new Date (to);
+    let diffTime = ending.getTime() - beginning.getTime();
+    let diffDays = diffTime / (1000 * 3600 * 24);
+    return diffDays;
+}
 // callback for click listener
 function performAction() {
   // access values from user
-  const destination = document.getElementById("destination").value;
-  const date = document.getElementById("tripDate").value;
-  if (!city || !date) {
+  const destinationCity = document.getElementById("destinationCity").value;
+  const destinationCountry = document.getElementById("destinationCountry").value;
+  const startDate = document.getElementById("tripDateFrom").value;
+  const finishDate = document.getElementById("tripDateTo").value;
+
+  if (!destinationCity || !destinationCountry || !startDate || !finishDate) {
     alert("Please fill all the fields");
     return;
   }
   // chaining promises
-  getLocation(destination).then(function (data) {
+  getLocation(destinationCity, destinationCountry).then(function (data) {
     let lat = data.postalCodes[0].lat;
     let lon = data.postalCodes[0].lng;
     let city = data.postalCodes[0].placeName;
     let country = data.postalCodes[0].countryCode;
-    postData("/api/journal", { lat, lon, city, country, date }).then(
+    postData("/api/journal", { lat, lon, city, country, startDate, finishDate, tripDays: tripDays(startDate, finishDate) }).then(
       updateErase()
     );
-    getWeatherForecast(lat, lon, countdown(date)).then(function (data) {
+    getWeatherForecast(lat, lon, countdown(startDate)).then(function (data) {
       let maxTemp = data[data.length - 1].max_temp;
       let minTemp = data[data.length - 1].min_temp;
       console.log(maxTemp, minTemp);
       document.getElementById("max_temp").innerHTML = maxTemp;
       document.getElementById("min_temp").innerHTML = minTemp;
     });
-    getImage(formatForImgSearch(destination)).then(function (images) {
+    getImage(formatForImgSearch(destinationCity)).then(function (images) {
       if (!images.hits.length) {
         return;
       }
@@ -64,13 +74,15 @@ function performAction() {
 }
 function updateErase() {
   updateUI();
-  document.getElementById("destination").value = "";
-  document.getElementById("tripDate").value = "";
+  document.getElementById("destinationCity").value = "";
+  document.getElementById("destinationCountry").value = "";
+  document.getElementById("tripDateFrom").value = "";
+  document.getElementById("tripDateTo").value = "";
 }
 // Get location from API
-const getLocation = async (city) => {
+const getLocation = async (city, country) => {
   const username = "brendamoreira";
-  const baseURL = `http://api.geonames.org/postalCodeSearchJSON?placename=${city}&maxRows=10&username=${username}`;
+  const baseURL = `http://api.geonames.org/postalCodeSearchJSON?placename=${city}&coutry=${country}&maxRows=10&username=${username}`;
   try {
     const res = await fetch(baseURL);
     const data = await res.json();
@@ -147,7 +159,7 @@ const updateUI = async () => {
   try {
     const entry = await request.json();
     console.log(entry);
-    document.getElementById("date").innerHTML = "Date " + entry.date;
+    document.getElementById("fromDate").innerHTML = "From " + entry.startDate;
     document.getElementById("city").innerHTML = entry.city;
   } catch (error) {
     console.log(error);
