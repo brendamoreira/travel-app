@@ -10,7 +10,6 @@ module.exports.getLocation = async (city, country) => {
   try {
     const res = await fetch(baseURL);
     const data = await res.json();
-    console.log(data, "****");
     if (res.status !== 200) {
       throw new Error(res.message);
     }

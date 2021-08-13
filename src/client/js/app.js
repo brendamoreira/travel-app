@@ -21,17 +21,21 @@ function performAction() {
     country: destinationCountry,
     startDate,
     finishDate,
-    tripDays: tripDays(startDate, finishDate),
   }).then(updateErase);
 }
 
 // dynamic UI update
 const updateUI = async (entry) => {
-    document.getElementById("fromDate").innerHTML = "From " + entry.startDate;
-    document.getElementById("city").innerHTML = entry.city;
-    document.getElementById("max_temp").innerHTML = entry.maxTemp;
-    document.getElementById("min_temp").innerHTML = entry.minTemp;
-    document.getElementById("image").setAttribute("src", entry.img);
+  document.getElementById("fromDate").innerHTML = "From " + entry.startDate;
+  document.getElementById("toDate").innerHTML = "To " + entry.finishDate;
+  document.getElementById("city").innerHTML = entry.city;
+  document.getElementById("duration").innerHTML = tripDays(
+    entry.startDate,
+    entry.finishDate
+  );
+  document.getElementById("max_temp").innerHTML = entry.maxTemp + "";
+  document.getElementById("min_temp").innerHTML = entry.minTemp;
+  document.getElementById("image").setAttribute("src", entry.img);
 };
 function updateErase(entry) {
   updateUI(entry);

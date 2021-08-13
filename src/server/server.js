@@ -36,15 +36,13 @@ app.post("/api/journal", async function (req, res) {
     lon,
     utils.countdown(startDate)
   );
-  let maxTemp = weather[weather.length - 1].max_temp;
-  let minTemp = weather[weather.length - 1].min_temp;
+  let maxTemp = weather.length ? weather[weather.length - 1].max_temp : null;
+  let minTemp = weather.length ? weather[weather.length - 1].min_temp : null;
   const images = await api.getImage(utils.formatForImgSearch(city));
 
   let img = images.hits.length ? images.hits[0].previewURL : "";
-
-  projectData[id] = req.body;
-  id += 1;
-  res.send({
+  let trip = {
+    id,
     city,
     country,
     startDate,
@@ -54,7 +52,10 @@ app.post("/api/journal", async function (req, res) {
     maxTemp,
     minTemp,
     img,
-  });
+  };
+  projectData[id] = trip;
+  id += 1;
+  res.send(trip);
 });
 
 app.get("/api/journal/latest", function (req, res) {
