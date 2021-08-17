@@ -25,7 +25,7 @@ const server = app.listen(port, function listening() {
 });
 
 app.post("/api/journal", async function (req, res) {
-  const { city, country, startDate, finishDate } = req.body;
+  const { city, country, startDate, finishDate, tripDays } = req.body;
   const location = await api.getLocation(city, country);
 
   let lat = location.postalCodes[0].lat;
@@ -47,6 +47,7 @@ app.post("/api/journal", async function (req, res) {
     country,
     startDate,
     finishDate,
+    tripDays,
     lat,
     lon,
     maxTemp,

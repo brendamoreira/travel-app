@@ -21,22 +21,41 @@ function performAction() {
     country: destinationCountry,
     startDate,
     finishDate,
+    tripDays: tripDays(startDate, finishDate),
   }).then(updateErase);
 }
 
 // dynamic UI update
-const updateUI = async (entry) => {
-  document.getElementById("fromDate").innerHTML = "From " + entry.startDate;
-  document.getElementById("toDate").innerHTML = "To " + entry.finishDate;
-  document.getElementById("city").innerHTML = entry.city;
-  document.getElementById("duration").innerHTML = tripDays(
-    entry.startDate,
-    entry.finishDate
-  );
-  document.getElementById("max_temp").innerHTML = entry.maxTemp + "";
-  document.getElementById("min_temp").innerHTML = entry.minTemp;
-  document.getElementById("image").setAttribute("src", entry.img);
+const updateUI = (entry) => {
+  createContainer(entry);
+  document.getElementById(`startDate-${entry.id}`).innerHTML = "From " + entry.startDate;
+  document.getElementById(`finishDate-${entry.id}`).innerHTML = "To " + entry.finishDate;
+  document.getElementById(`city-${entry.id}`).innerHTML = entry.city;
+  document.getElementById(`tripDays-${entry.id}`).innerHTML = "Duration " + entry.tripDays + "days";
+  document.getElementById(`maxTemp-${entry.id}`).innerHTML = entry.maxTemp + "ºC";
+  document.getElementById(`minTemp-${entry.id}`).innerHTML = entry.minTemp + "ºC";
+  document.getElementById(`img-${entry.id}`).setAttribute("src", entry.img);
 };
+
+// creates new html dynamically
+function createContainer(entry) {
+  const container = document.createElement("li");
+  container.setAttribute("class", "entry-info-container");
+  for (let key in entry) {
+    if (key != "id" && key != "img") {
+      let el = document.createElement("div");
+      el.setAttribute("id", `${key}-${entry.id}`);
+      container.appendChild(el);
+    }
+    if (key === "img") {
+      let el = document.createElement("img");
+      el.setAttribute("id", `${key}-${entry.id}`);
+      container.appendChild(el);
+    }
+  }
+  document.getElementById("entryHolder").appendChild(container);
+}
+
 function updateErase(entry) {
   updateUI(entry);
   document.getElementById("destinationCity").value = "";
