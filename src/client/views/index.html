@@ -10,26 +10,38 @@
 
 <body>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-  <div id="app">
-    <div class="holder headline">
-      Travel App
+  <div id="app" class="row">
+    <div class="col s4">
+      <h4 class="holder headline teal-text text-lighten-2">
+        Travel App
+      </h4>
+      <div class="holder city">
+        <br>
+        <div class="input-field">
+          <input type="text" id="destinationCity" placeholder="enter city here">
+          <label for="destinationCity">Enter City here</label>
+        </div>
+        <div class="input-field">
+          <input type="text" id="destinationCountry" placeholder="enter country code here, ex: US, CA, NL"
+            maxlength="2">
+          <label for="destinationCountry">Enter Country Code here</label>
+        </div>
+      </div>
+      <div class="holder date">
+        <p class="grey-text">When is your travel?</p>
+        <div class="input-field">
+          <input class="grey-text" id="tripDateFrom" type="date"></input>
+          <label for="tripDateFrom">From</label>
+        </div>
+        <div class="input-field">
+          <input class="grey-text" id="tripDateTo" type="date"></input>
+          <label for="tripDateTo">To</label>
+        </div>
+        <button id="generate" type="submit" class="waves-effect waves-light btn"> Generate </button>
+      </div>
     </div>
-    <div class="holder city">
-      <label for="destinationCity">Enter City here</label>
-      <input type="text" id="destinationCity" placeholder="enter city here">
-      <label for="destinationCountry">Enter Country Code here</label>
-      <input type="text" id="destinationCountry" placeholder="enter country code here, ex: US, CA, NL" maxlength="2">
-    </div>
-    <div class="holder date">
-      <label for="tripDateFrom">When is your travel?</label>
-      <div>From</div>
-      <input class="myInput" id="tripDateFrom" type="date"></input>
-      <div>To</div>
-      <input class="myInput" id="tripDateTo" type="date"></input>
-      <button id="generate" type="submit"> Generate </button>
-    </div>
-    <div class="holder entry">
-      <div class="title">Your trips:</div>
+    <div class="col s8">
+      <div>Your trips:</div>
       <ul id="entryHolder">
       </ul>
     </div>

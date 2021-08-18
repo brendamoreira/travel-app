@@ -28,31 +28,38 @@ function performAction() {
 // dynamic UI update
 const updateUI = (entry) => {
   createContainer(entry);
-  document.getElementById(`startDate-${entry.id}`).innerHTML = "From " + entry.startDate;
-  document.getElementById(`finishDate-${entry.id}`).innerHTML = "To " + entry.finishDate;
-  document.getElementById(`city-${entry.id}`).innerHTML = entry.city;
-  document.getElementById(`tripDays-${entry.id}`).innerHTML = "Duration " + entry.tripDays + "days";
-  document.getElementById(`maxTemp-${entry.id}`).innerHTML = entry.maxTemp + "ºC";
-  document.getElementById(`minTemp-${entry.id}`).innerHTML = entry.minTemp + "ºC";
+  document.getElementById(`startDate-${entry.id}`).innerHTML = "<b>From: </b>" + entry.startDate;
+  document.getElementById(`finishDate-${entry.id}`).innerHTML = "<b>To: </b>" + entry.finishDate;
+  document.getElementById(`city-${entry.id}`).innerHTML = `<h5>${entry.city.toUpperCase()}</h5>`;
+  document.getElementById(`tripDays-${entry.id}`).innerHTML = "<b>Duration: </b>" + entry.tripDays + " day(s)";
+  document.getElementById(`maxTemp-${entry.id}`).innerHTML = "<b>Max Temp: </b>" + entry.maxTemp + "ºC";
+  document.getElementById(`minTemp-${entry.id}`).innerHTML = "<b>Min Temp: </b>" + entry.minTemp + "ºC";
   document.getElementById(`img-${entry.id}`).setAttribute("src", entry.img);
 };
 
 // creates new html dynamically
 function createContainer(entry) {
   const container = document.createElement("li");
-  container.setAttribute("class", "entry-info-container");
+  container.setAttribute("class", "card horizontal");
+  const cardImg = document.createElement("div");
+  cardImg.setAttribute("class", "card-image avatar-holder");
+  const cardContent = document.createElement("div");
+  cardContent.setAttribute("class", "card-content");
   for (let key in entry) {
     if (key != "id" && key != "img") {
       let el = document.createElement("div");
       el.setAttribute("id", `${key}-${entry.id}`);
-      container.appendChild(el);
+      cardContent.appendChild(el);
     }
     if (key === "img") {
       let el = document.createElement("img");
-      el.setAttribute("id", `${key}-${entry.id}`);
-      container.appendChild(el);
+      el.setAttribute("id", `${key}-${entry.id}`)
+      el.setAttribute("class", "city-avatar");
+      cardImg.appendChild(el);
     }
   }
+  container.appendChild(cardImg);
+  container.appendChild(cardContent);
   document.getElementById("entryHolder").appendChild(container);
 }
 
