@@ -15,16 +15,21 @@ This project uses `nodejs + express` on the backend with `nodemon` for developme
 For testing it uses `jest`.
 
 1. to intall the dependencies
+
 ```npm install```
 
 2. to run the dev server
+
 ```npm run build-dev```
 
 3. to build the project for production
+
 ```npm run build```
 
 4. to run the server
+
 ```npm run start```
 
 5. to run tests
+
 ```npm run test```
