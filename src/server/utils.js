@@ -4,7 +4,7 @@ module.exports.countdown = (date) => {
   let tripDay = new Date(date);
   let diffTime = tripDay.getTime() - today.getTime();
   let diffDays = diffTime / (1000 * 3600 * 24);
-  return diffDays;
+  return Math.ceil(diffDays);
 }
 
 // formats destination for image api

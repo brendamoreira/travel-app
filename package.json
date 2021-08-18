@@ -1,10 +1,10 @@
 {
-  "name": "weather-journal-app",
+  "name": "travel-app",
   "version": "1.0.0",
   "description": "## Overview This project requires you to create an asynchronous web app that uses Web API and user data to dynamically update the UI.",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "start": "nodemon src/server/server.js",
     "build": "webpack --config webpack.config.js --open",
     "dev": "webpack-dev-server --config webpack.config.js --open"
